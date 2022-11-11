@@ -8,16 +8,16 @@ import java.io.Serializable;
 public class Permission implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer idPermission;
     private String url;
     private String method;
 
     public Integer getId() {
-        return id;
+        return idPermission;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.idPermission = id;
     }
 
     public String getUrl() {
