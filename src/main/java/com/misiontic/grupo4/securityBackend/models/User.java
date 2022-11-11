@@ -1,5 +1,7 @@
 package com.misiontic.grupo4.securityBackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -8,17 +10,22 @@ import java.io.Serializable;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer idUser;
     private String nickname;
     private String email;
     private String password;
 
+    @ManyToMany
+    @JoinColumn(name="IdRol")
+    @JsonIgnoreProperties("users")
+    private Rol rol;
+
     public Integer getId() {
-        return id;
+        return idUser;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.idUser = id;
     }
 
     public String getNickname() {
@@ -43,5 +50,13 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }
