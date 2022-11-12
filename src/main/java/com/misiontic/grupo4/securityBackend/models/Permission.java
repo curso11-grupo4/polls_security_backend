@@ -2,6 +2,7 @@ package com.misiontic.grupo4.securityBackend.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "permission")
@@ -11,6 +12,9 @@ public class Permission implements Serializable {
     private Integer idPermission;
     private String url;
     private String method;
+
+    @ManyToMany(mappedBy = "permissions")
+    private Set<Rol> roles;
 
     public Integer getId() {
         return idPermission;
@@ -34,5 +38,13 @@ public class Permission implements Serializable {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    public Set<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
     }
 }

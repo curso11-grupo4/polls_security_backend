@@ -61,7 +61,7 @@ public class UserServices {
     }
 
     public boolean delete(int id){
-        boolean success = this.show(id).map(user -> {
+        Boolean success = this.show(id).map(user -> {
             this.userRepository.delete(user);
             return true;
         }).orElse(false);
