@@ -5,6 +5,8 @@ import com.misiontic.grupo4.securityBackend.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +28,10 @@ public class UserServices {
 
     public User create(User newUser){
         if(newUser.getId() == null){
-            if(newUser.getEmail() != null && newUser.getNickname() != null && newUser.getPassword() !=null)
+            if(newUser.getEmail() != null && newUser.getNickname() != null && newUser.getPassword() !=null) {
+                newUser.setPassword(this.convertToSHA256(newUser.getPassword()));
                 return this.userRepository.save(newUser);
+            }
             else{
                 // TODO 400 bad request
                 return newUser;
@@ -46,7 +50,7 @@ public class UserServices {
                 if(updateUser.getNickname() != null)
                     tempUser.get().setNickname(updateUser.getNickname());
                 if(updateUser.getPassword() != null)
-                    tempUser.get().setPassword(updateUser.getPassword());
+                    tempUser.get().setPassword(this.convertToSHA256(updateUser.getPassword()));
                 return this.userRepository.save(tempUser.get());
             }
             else{
@@ -66,5 +70,21 @@ public class UserServices {
             return true;
         }).orElse(false);
         return success;
+    }
+
+    public String convertToSHA256(String password){
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            return null;
+        }
+        byte[] hash = md.digest(password.getBytes());
+        StringBuffer sb = new StringBuffer();
+        for(byte b: hash)
+            sb.append( String.format("%02x", b));
+        return sb.toString();
     }
 }
