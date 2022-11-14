@@ -15,7 +15,7 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name="IdRol")
     @JsonIgnoreProperties("users")
     private Rol rol;

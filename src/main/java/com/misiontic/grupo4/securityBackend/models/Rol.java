@@ -12,7 +12,7 @@ import java.util.Set;
 public class Rol implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer idRol;
     private String name;
     private String description;
 
@@ -29,11 +29,11 @@ public class Rol implements Serializable {
     private Set<Permission> permissions;
 
     public Integer getId() {
-        return id;
+        return idRol;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.idRol = id;
     }
 
     public String getName() {
