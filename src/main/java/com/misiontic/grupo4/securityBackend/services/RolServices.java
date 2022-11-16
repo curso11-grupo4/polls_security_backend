@@ -24,7 +24,7 @@ public class RolServices {
     }
 
     public Rol create(Rol newRol){
-        if(newRol.getId() == null){
+        if(newRol.getIdRol() == null){
             if(newRol.getName() != null)
                 return this.rolRepository.save(newRol);
             else{

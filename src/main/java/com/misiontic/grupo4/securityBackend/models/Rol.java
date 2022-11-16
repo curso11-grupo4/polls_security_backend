@@ -13,6 +13,7 @@ public class Rol implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idRol;
+    @Column(name= "name", nullable = false, unique = true, length = 50)
     private String name;
     private String description;
 
@@ -28,11 +29,11 @@ public class Rol implements Serializable {
     )
     private Set<Permission> permissions;
 
-    public Integer getId() {
+    public Integer getIdRol() {
         return idRol;
     }
 
-    public void setId(Integer id) {
+    public void setIdRol(Integer id) {
         this.idRol = id;
     }
 
@@ -58,5 +59,13 @@ public class Rol implements Serializable {
 
     public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

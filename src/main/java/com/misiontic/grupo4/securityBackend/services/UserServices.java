@@ -3,10 +3,14 @@ package com.misiontic.grupo4.securityBackend.services;
 import com.misiontic.grupo4.securityBackend.repositories.UserRepository;
 import com.misiontic.grupo4.securityBackend.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.lang.module.ResolutionException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +28,14 @@ public class UserServices {
 
     public Optional<User> show(int id){
         return userRepository.findById(id);
+    }
+
+    public Optional<User> showByNickname(String nickname){
+        return this.userRepository.findByNickname(nickname);
+    }
+
+    public Optional<User> showByEmail(String email){
+        return this.userRepository.findByEmail(email);
     }
 
     public User create(User newUser){
@@ -70,6 +82,22 @@ public class UserServices {
             return true;
         }).orElse(false);
         return success;
+    }
+
+    public User login(User user){
+        User response;
+        if(user.getPassword() != null && user.getEmail() != null) {
+            String email = user.getEmail();
+            String password = this.convertToSHA256(user.getPassword());
+            Optional<User> result = this.userRepository.login(email, password);
+            if(result.isEmpty())
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid access");
+            else
+                response = result.get();
+        }
+        else
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "mandatory fields had to been sent");
+        return  response;
     }
 
     public String convertToSHA256(String password){

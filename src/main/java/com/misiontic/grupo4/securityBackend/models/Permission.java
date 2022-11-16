@@ -10,7 +10,9 @@ public class Permission implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPermission;
+    @Column(name="url", nullable = false, unique = true)
     private String url;
+    @Column(name = "method", nullable = false)
     private String method;
 
     @ManyToMany(mappedBy = "permissions")
