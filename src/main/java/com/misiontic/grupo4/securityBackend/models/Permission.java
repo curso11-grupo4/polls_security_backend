@@ -1,5 +1,7 @@
 package com.misiontic.grupo4.securityBackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -16,6 +18,7 @@ public class Permission implements Serializable {
     private String method;
 
     @ManyToMany(mappedBy = "permissions")
+    @JsonIgnoreProperties("permissions")
     private Set<Rol> roles;
 
     public Integer getId() {

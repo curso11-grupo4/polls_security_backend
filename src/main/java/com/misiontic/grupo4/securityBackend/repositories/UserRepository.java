@@ -1,7 +1,6 @@
 package com.misiontic.grupo4.securityBackend.repositories;
 
 import com.misiontic.grupo4.securityBackend.models.User;
-import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

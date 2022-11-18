@@ -4,13 +4,13 @@ import com.misiontic.grupo4.securityBackend.repositories.UserRepository;
 import com.misiontic.grupo4.securityBackend.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.module.ResolutionException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,7 +84,7 @@ public class UserServices {
         return success;
     }
 
-    public User login(User user){
+    public ResponseEntity<User> login(User user){
         User response;
         if(user.getPassword() != null && user.getEmail() != null) {
             String email = user.getEmail();
@@ -97,7 +97,7 @@ public class UserServices {
         }
         else
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "mandatory fields had to been sent");
-        return  response;
+        return  new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public String convertToSHA256(String password){

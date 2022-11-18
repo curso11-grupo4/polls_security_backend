@@ -5,9 +5,9 @@ import com.misiontic.grupo4.securityBackend.models.User;
 import com.misiontic.grupo4.securityBackend.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User loginUser(@RequestBody User user){
+    public ResponseEntity<User> loginUser(@RequestBody User user){
         return this.userServices.login(user);
     }
 
