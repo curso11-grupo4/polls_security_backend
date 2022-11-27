@@ -22,22 +22,51 @@ public class UserServices {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Get all users
+     * @return a list of users
+     */
     public List<User> index(){
         return (List<User>)this.userRepository.findAll();
     }
 
+    /**
+     * Get a specific user object by id if this exists -Optional-
+     * @param id
+     * @return an object with the information of a specific user
+     */
     public Optional<User> show(int id){
-        return userRepository.findById(id);
+        Optional<User> user = this.userRepository.findById(id);
+        if(user.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "User.id does not exit in database");
+        return user;
     }
 
+    /**
+     * Get a specific user by the nickname if it exists -Optional-
+     * @param nickname
+     * @return a model user
+     */
     public Optional<User> showByNickname(String nickname){
         return this.userRepository.findByNickname(nickname);
     }
 
+    /**
+     * Get a specific user by the email if it exists -Optional-
+     * @param email
+     * @return a model user
+     */
     public Optional<User> showByEmail(String email){
         return this.userRepository.findByEmail(email);
     }
 
+    /**
+     * Create a new user, it must not come without email, nickname and
+     * password
+     * @param newUser
+     * @return a User model
+     */
     public User create(User newUser){
         if(newUser.getId() == null){
             if(newUser.getEmail() != null && newUser.getNickname() != null && newUser.getPassword() !=null) {
@@ -45,16 +74,22 @@ public class UserServices {
                 return this.userRepository.save(newUser);
             }
             else{
-                // TODO 400 bad request
-                return newUser;
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Email, nickname and password are mandatory");
             }
         }
         else{
-            // TODO validate if id exists
-            return newUser;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "user.id is already in the database");
         }
     }
 
+    /**
+     * with the id the object is fetched and update
+     * @param id
+     * @param updateUser
+     * @return a User model
+     */
     public User update(int id, User updateUser){
         if(id > 0){
             Optional<User> tempUser = this.show(id);
@@ -66,16 +101,22 @@ public class UserServices {
                 return this.userRepository.save(tempUser.get());
             }
             else{
-                // TODO bad request
-                return updateUser;
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "User.id does not exist in database");
             }
         }
         else{
-            // TODO 400 BAD REQUEST
-            return updateUser;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "User.id need to be up to 0");
         }
     }
 
+    /**
+     * User is deleted by the id and if the id is not
+     * found or something is wrong, return will be false
+     * @param id
+     * @return
+     */
     public boolean delete(int id){
         Boolean success = this.show(id).map(user -> {
             this.userRepository.delete(user);
@@ -84,6 +125,11 @@ public class UserServices {
         return success;
     }
 
+    /**
+     * User authentication
+     * @param user
+     * @return
+     */
     public ResponseEntity<User> login(User user){
         User response;
         if(user.getPassword() != null && user.getEmail() != null) {
@@ -100,6 +146,11 @@ public class UserServices {
         return  new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    /**
+     * Password is encrypted
+     * @param password
+     * @return
+     */
     public String convertToSHA256(String password){
         MessageDigest md = null;
         try {

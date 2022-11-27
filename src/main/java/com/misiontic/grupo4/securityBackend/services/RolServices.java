@@ -24,30 +24,52 @@ public class RolServices {
     @Autowired
     private PermissionRepository permissionRepository;
 
+    /**
+     * Get all roles
+     * @return a list of Rol object
+     */
     public List<Rol> index(){
         return (List<Rol>)this.rolRepository.findAll();
     }
 
+    /**
+     * Get a specific Rol object by the id if this exists -Optional-
+     *
+     * @param id
+     * @return an object with the information of a specific Rol
+     */
     public Optional<Rol> show(int id){
         return this.rolRepository.findById(id);
     }
 
+    /**
+     * Create a new Rol, it must not come without id and
+     * Rol
+     * @param newRol
+     * @return a Rol model
+     */
     public Rol create(Rol newRol){
         if(newRol.getIdRol() == null){
             if(newRol.getName() != null)
                 return this.rolRepository.save(newRol);
             else{
-                // TODO 400 bad request
-                return newRol;
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Rol name is mandatory");
             }
         }
         else{
-            // TODO validate if exists, 4000 bad request
-            return newRol;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Rol.id is already in the database");
         }
 
     }
 
+    /**
+     * With the id the object is fetched and update
+     * @param id
+     * @param updateRol
+     * @return a Rol model
+     */
     public Rol update(int id, Rol updateRol){
         if(id>0){
             Optional<Rol> tempRol = this.show(id);
@@ -59,16 +81,22 @@ public class RolServices {
                 return this.rolRepository.save(tempRol.get());
             }
             else{
-                // TODO 404 bad request
-                return updateRol;
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Rol.id does not exist in database");
             }
         }
         else{
-            // TODO 400 bas request
-            return updateRol;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Rol.id need to be up to 0");
         }
     }
 
+    /**
+     * Rol is deleted by the id and if it is not found or
+     * something come wrong, it will return false
+     * @param id
+     * @return a true or false dependig on the result
+     */
     public boolean delete(int id){
         Boolean success = this.show(id).map(Rol -> {
             this.rolRepository.delete(Rol);
@@ -77,6 +105,12 @@ public class RolServices {
         return success;
     }
 
+    /**
+     * a permission is joined with a rol
+     * @param idRol
+     * @param idPermission
+     * @return if the rol does not have a permission yet, the permission is update
+     */
     public ResponseEntity<Rol> updateAddPermission(int idRol, int idPermission){
         Optional<Rol> rol = this.rolRepository.findById(idRol);
         if(rol.isPresent()){
@@ -98,6 +132,12 @@ public class RolServices {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol.id does not exist in data base");
     }
 
+    /**
+     * Check if a specific rol has a specific permission
+     * @param idRol
+     * @param permission
+     * @return if rol has the permission return true, else false
+     */
     public ResponseEntity<Boolean> validateGrant(int idRol, Permission permission){
         boolean isGrant = false;
         Optional<Rol> rol = this.rolRepository.findById(idRol);

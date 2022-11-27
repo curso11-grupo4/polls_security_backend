@@ -30,6 +30,10 @@ public class Rol implements Serializable {
     @JsonIgnoreProperties("roles")
     private Set<Permission> permissions;
 
+    /**
+     *  This method returns the current rol id
+     * @return rol id
+     */
     public Integer getIdRol() {
         return idRol;
     }
@@ -38,34 +42,66 @@ public class Rol implements Serializable {
         this.idRol = id;
     }
 
+    /**
+     * This method return the current rol name
+     * @return rol name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * This method updates the value for the rol name
+     * @param name rol name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * This method returns the current rol description
+     * @return rol description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * This method updates the value of the rol description
+     * @param description rol description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * This method returns the permissions associated to the current rol
+     * @return rol permissions
+     */
     public Set<Permission> getPermissions() {
         return permissions;
     }
 
+    /**
+     * This method updated the permissions associated to the current rol
+     * @param permissions rol permissions
+     */
     public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 
+    /**
+     * This method returns a list of users associated at the current rol
+     * @return users with current rol
+     */
     public List<User> getUsers() {
         return users;
     }
 
+    /**
+     *
+     * @param users
+     */
     public void setUsers(List<User> users) {
         this.users = users;
     }
